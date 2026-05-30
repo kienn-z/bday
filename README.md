@@ -10,24 +10,13 @@
 *{box-sizing:border-box;margin:0;padding:0}
 
 body{
-  min-height:100vh;
+  height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
   font-family:"Poppins",sans-serif;
-  background: radial-gradient(circle at top, #ffe3ef 0%, #eadcff 40%, #d7f3ff 100%);
-  overflow-x:hidden;
-}
-
-/* soft glow */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,.4), transparent 25%),
-    radial-gradient(circle at 80% 30%, rgba(255,255,255,.2), transparent 20%);
+  background: radial-gradient(circle at top, #ffe3ef 0%, #eadcff 45%, #d7f3ff 100%);
+  overflow:hidden;
 }
 
 /* CARD */
@@ -35,12 +24,12 @@ body::before{
   width:min(430px,92vw);
   height:min(650px,88vh);
   border-radius:30px;
-  background:rgba(255,248,251,.7);
+  background:rgba(255,248,251,.75);
   backdrop-filter:blur(18px);
   position:relative;
   overflow:hidden;
   text-align:center;
-  padding:34px 28px;
+  padding:30px;
   box-shadow:0 20px 60px rgba(124,63,111,.18);
 }
 
@@ -55,7 +44,7 @@ h1{
 
 .name{
   font-family:"Great Vibes",cursive;
-  font-size:64px;
+  font-size:60px;
   color:#b16aa6;
   margin:6px 0 10px;
 }
@@ -63,33 +52,92 @@ h1{
 p{
   font-size:14px;
   color:#4b4453;
-  margin:14px 0;
+  margin:10px 0;
 }
 
-/* BOUQUET — ALWAYS VISIBLE */
-.bouquet-wrap{
+/* GIFT */
+.gift{
   position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:60%;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:rgba(255,255,255,.35);
+  z-index:5;
 }
 
-.bouquet-img{
+.box{
+  width:160px;
+  height:160px;
+  background:linear-gradient(135deg,#ffb6d2,#a855f7);
+  border-radius:16px;
+  position:relative;
+  cursor:pointer;
+  box-shadow:0 20px 40px rgba(0,0,0,.25);
+  transition:.6s ease;
+}
+
+.box::before,
+.box::after{
+  content:"";
+  position:absolute;
+  background:#fff;
+}
+
+.box::before{
+  width:100%;
+  height:18px;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+.box::after{
+  width:18px;
+  height:100%;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+/* OPEN STATE */
+.gift.open{
+  opacity:0;
+  transform:scale(.7);
+  pointer-events:none;
+  transition:1s ease;
+}
+
+/* BOUQUET (SAFE DISPLAY) */
+.bouquet{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transform:translateY(30px);
+  transition:1.2s ease;
+}
+
+.bouquet.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* IMAGE SAFETY */
+.bouquet img{
   width:100%;
   height:100%;
   object-fit:cover;
   object-position:center bottom;
+  display:block;
 }
 
-/* overlay soft fade */
+/* overlay */
 .overlay{
   position:absolute;
   inset:0;
-  background:linear-gradient(to top, rgba(255,230,240,.85), transparent 50%);
+  background:linear-gradient(to top, rgba(255,230,240,.85), transparent 55%);
 }
 
-/* message ON bouquet */
+/* message */
 .final{
   position:absolute;
   bottom:20px;
@@ -98,7 +146,7 @@ p{
   font-family:"Great Vibes",cursive;
   font-size:28px;
   color:white;
-  text-shadow:0 2px 12px rgba(0,0,0,.35);
+  text-shadow:0 2px 12px rgba(0,0,0,.4);
 }
 
 /* petals */
@@ -107,7 +155,6 @@ p{
   top:-10vh;
   font-size:18px;
   pointer-events:none;
-  z-index:10;
 }
 
 /* sparkles */
@@ -115,7 +162,6 @@ p{
   position:fixed;
   font-size:10px;
   color:white;
-  opacity:.7;
   animation:twinkle 2.5s infinite alternate;
 }
 @keyframes twinkle{
@@ -127,12 +173,15 @@ p{
 
 <body>
 
-<audio id="music" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9c6a0cdb4f.mp3">
-</audio>
-
 <div class="card">
 
+  <!-- GIFT -->
+  <div class="gift" id="gift">
+    <div class="box" onclick="openGift()"></div>
+    <p>tap to open gift 🎁</p>
+  </div>
+
+  <!-- CONTENT -->
   <h1>happy birthday</h1>
   <div class="name">Arni ♡</div>
 
@@ -141,36 +190,48 @@ p{
   <p>you make things feel lighter</p>
   <p>and that means more than you think</p>
 
-  <!-- BOUQUET ALWAYS SHOWN -->
-  <div class="bouquet-wrap">
-
-    <img class="bouquet-img" src="./image.jpg" alt="bouquet">
-
+  <!-- BOUQUET -->
+  <div class="bouquet" id="bouquet">
+    <img src="./image.jpg" alt="bouquet"
+         onerror="this.style.background='#ffd6e7'">
     <div class="overlay"></div>
-
     <div class="final">
       Happy Birthday, Arni 💗<br>
       i’m really glad i met you
     </div>
-
   </div>
 
 </div>
 
 <script>
-/* sparkles */
-for(let i=0;i<18;i++){
-  const s=document.createElement("div");
-  s.className="sparkle";
-  s.innerText="✨";
-  s.style.left=Math.random()*100+"vw";
-  s.style.top=Math.random()*100+"vh";
-  document.body.appendChild(s);
+
+let opened = false;
+
+function openGift(){
+  if(opened) return;
+  opened = true;
+
+  document.getElementById("gift").classList.add("open");
+
+  setTimeout(()=>{
+    document.getElementById("bouquet").classList.add("show");
+    petals();
+    sparkles();
+    music();
+  }, 900);
 }
 
-/* petals */
+/* MUSIC */
+function music(){
+  const a = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_9c6a0cdb4f.mp3");
+  a.loop = true;
+  a.play().catch(()=>{});
+}
+
+/* PETALS */
 function petals(){
   const list=["🌸","🌷","💮"];
+
   for(let i=0;i<30;i++){
     const p=document.createElement("div");
     p.className="petal";
@@ -179,7 +240,7 @@ function petals(){
     let x=Math.random()*window.innerWidth;
     let drift=(Math.random()*200-100);
     let start=performance.now();
-    let dur=7000;
+    let dur=6000;
 
     function fall(t){
       let p01=Math.min((t-start)/dur,1);
@@ -195,11 +256,18 @@ function petals(){
   }
 }
 
-/* auto effects */
-setTimeout(()=>{
-  petals();
-  document.getElementById("music").play().catch(()=>{});
-}, 1500);
+/* sparkles */
+function sparkles(){
+  for(let i=0;i<15;i++){
+    const s=document.createElement("div");
+    s.className="sparkle";
+    s.innerText="✨";
+    s.style.left=Math.random()*100+"vw";
+    s.style.top=Math.random()*100+"vh";
+    document.body.appendChild(s);
+  }
+}
+
 </script>
 
 </body>
