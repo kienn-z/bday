@@ -7,13 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Great+Vibes&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --pink:#ffb6c8;
-  --rose:#ff6f91;
-  --lav:#c9b6ff;
-  --card:#fff8fb;
-}
-
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
@@ -21,20 +14,20 @@ body{
   display:grid;
   place-items:center;
   overflow-x:hidden;
+  font-family:"Poppins",sans-serif;
   background:
     radial-gradient(circle at top, #ffe3ef 0%, #eadcff 38%, #d7f3ff 100%);
-  font-family:"Poppins",sans-serif;
 }
 
 body::before{
   content:"";
   position:fixed;
   inset:0;
-  background:
-    radial-gradient(circle at 20% 18%, rgba(255,255,255,.45), transparent 20%),
-    radial-gradient(circle at 82% 15%, rgba(255,255,255,.28), transparent 18%),
-    radial-gradient(circle at 70% 72%, rgba(255,255,255,.20), transparent 22%);
   pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.42), transparent 20%),
+    radial-gradient(circle at 82% 15%, rgba(255,255,255,.25), transparent 18%),
+    radial-gradient(circle at 70% 72%, rgba(255,255,255,.18), transparent 22%);
   animation:bgGlow 8s ease-in-out infinite alternate;
 }
 
@@ -61,17 +54,17 @@ body::before{
   width:min(430px,92vw);
   height:min(650px,88vh);
   border-radius:30px;
-  background:rgba(255,248,251,.58);
+  background:rgba(255,248,251,.62);
   backdrop-filter:blur(18px);
-  text-align:center;
-  padding:34px 28px;
-  box-shadow:
-    0 20px 60px rgba(124,63,111,.18),
-    inset 0 0 0 1px rgba(255,255,255,.55);
   position:relative;
   overflow:hidden;
   z-index:2;
+  text-align:center;
+  padding:34px 28px;
   border:1px solid rgba(255,255,255,.55);
+  box-shadow:
+    0 20px 60px rgba(124,63,111,.18),
+    inset 0 0 0 1px rgba(255,255,255,.55);
 }
 
 .card::before{
@@ -88,11 +81,11 @@ body::before{
   position:absolute;
   inset:-12px;
   border-radius:40px;
-  border:2px solid rgba(255,182,200,.25);
+  border:2px solid rgba(255,182,200,.22);
   box-shadow:
-    0 0 18px rgba(255,182,200,.25),
-    0 0 38px rgba(201,182,255,.2),
-    0 0 70px rgba(255,255,255,.15);
+    0 0 18px rgba(255,182,200,.22),
+    0 0 38px rgba(201,182,255,.18),
+    0 0 70px rgba(255,255,255,.12);
   animation:fairyGlow 2.8s ease-in-out infinite alternate;
   pointer-events:none;
 }
@@ -138,20 +131,20 @@ p{
   transform:translateY(0);
 }
 
+/* bouquet area */
 .bouquet-wrap{
   position:absolute;
   left:0;
   right:0;
   bottom:0;
-  height:58%;
+  height:56%;
   z-index:3;
   opacity:0;
   transform:translateY(24%);
   transition:transform 2.2s cubic-bezier(.2,.9,.2,1), opacity 1.2s ease;
-  pointer-events:none;
   overflow:hidden;
+  pointer-events:none;
 }
-
 .bouquet-wrap.show{
   opacity:1;
   transform:translateY(0);
@@ -224,7 +217,6 @@ p{
   opacity:0;
   transition:1.2s ease;
 }
-
 .bouquet-wrap.show .final{
   opacity:1;
 }
@@ -235,7 +227,6 @@ p{
   font-size:18px;
   opacity:.85;
   z-index:10;
-  will-change:transform, opacity;
   pointer-events:none;
   filter:drop-shadow(0 3px 2px rgba(255,120,160,.25));
 }
@@ -308,8 +299,7 @@ for (let i = 0; i < 18; i++) {
 let played = false;
 function playMusic(){
   if (played) return;
-  const audio = document.getElementById("music");
-  audio.play().catch(()=>{});
+  document.getElementById("music").play().catch(()=>{});
   played = true;
 }
 
@@ -353,12 +343,11 @@ function reveal(){
 }
 
 setTimeout(reveal, 9000);
+window.addEventListener("click", reveal, { once: true });
 window.addEventListener("scroll", () => {
   const y = window.scrollY;
   bouquetWrap.style.transform = `translateY(${Math.max(0, 24 - y/18)}px)`;
 });
-
-window.addEventListener("click", reveal, { once: true });
 </script>
 
 </body>
