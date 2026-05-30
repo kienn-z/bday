@@ -15,7 +15,7 @@
 }
 
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%}
+html,body{margin:0;padding:0}
 body{
   min-height:100vh;
   display:grid;
@@ -35,7 +35,7 @@ body::before{
     radial-gradient(circle at 82% 15%, rgba(255,255,255,.28), transparent 18%),
     radial-gradient(circle at 70% 72%, rgba(255,255,255,.20), transparent 22%);
   pointer-events:none;
-  animation: bgGlow 8s ease-in-out infinite alternate;
+  animation:bgGlow 8s ease-in-out infinite alternate;
 }
 
 @keyframes bgGlow{
@@ -48,7 +48,7 @@ body::before{
   font-size:10px;
   color:#fff;
   opacity:.6;
-  animation: twinkle 2.8s infinite alternate;
+  animation:twinkle 2.8s infinite alternate;
   pointer-events:none;
   z-index:1;
 }
@@ -138,77 +138,65 @@ p{
   transform:translateY(0);
 }
 
-.heart-line{
-  color:#e67aa0;
-  font-size:16px;
-  line-height:1;
-  margin:8px 0;
-  position:relative;
-  z-index:4;
-}
-
 .bouquet-wrap{
   position:absolute;
   left:0;
   right:0;
-  bottom:-18%;
-  height:68%;
+  bottom:0;
+  height:58%;
   z-index:3;
-  transform:translateY(35%);
-  transition:transform 2.2s cubic-bezier(.2,.9,.2,1), opacity 1.2s ease;
   opacity:0;
+  transform:translateY(24%);
+  transition:transform 2.2s cubic-bezier(.2,.9,.2,1), opacity 1.2s ease;
   pointer-events:none;
-  will-change:transform, opacity;
+  overflow:hidden;
 }
+
 .bouquet-wrap.show{
   opacity:1;
   transform:translateY(0);
 }
 
-.bouquet-frame{
+.bouquet-img{
   position:absolute;
   inset:0;
-  border-radius:26px 26px 30px 30px;
-  overflow:hidden;
-  filter:drop-shadow(0 18px 35px rgba(126,66,109,.18));
-}
-
-.bouquet-img{
   width:100%;
   height:100%;
   object-fit:cover;
   object-position:center bottom;
-  transform:scale(1.03);
   display:block;
+  z-index:1;
 }
 
-.bouquet-wrap::before,
-.bouquet-wrap::after{
-  content:"";
+.bouquet-overlay{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  background:
+    linear-gradient(to top, rgba(255, 229, 237, .92) 0%, rgba(255,255,255,0) 42%),
+    linear-gradient(to bottom, rgba(255,255,255,.10) 0%, rgba(255,255,255,.06) 100%);
+}
+
+.bouquet-fold{
   position:absolute;
   bottom:0;
-  width:34%;
-  height:38%;
-  background:linear-gradient(135deg, rgba(255,255,255,.4), rgba(255,190,210,.55));
-  filter:blur(.2px);
-  z-index:4;
-  opacity:.95;
+  width:36%;
+  height:42%;
+  background:linear-gradient(135deg, rgba(255,255,255,.35), rgba(255,190,210,.75));
+  z-index:3;
+  filter:blur(.3px);
 }
 
-.bouquet-wrap::before{
-  left:-3%;
-  clip-path:polygon(0 0,100% 0,76% 100%,0 100%);
-  transform-origin:bottom left;
+.bouquet-fold.left{
+  left:-2%;
+  clip-path:polygon(0 0, 100% 0, 76% 100%, 0 100%);
   transform:skewX(-12deg);
-  box-shadow:inset 0 0 26px rgba(255,255,255,.25);
 }
 
-.bouquet-wrap::after{
-  right:-3%;
-  clip-path:polygon(0 0,100% 0,100% 100%,24% 100%);
-  transform-origin:bottom right;
+.bouquet-fold.right{
+  right:-2%;
+  clip-path:polygon(0 0, 100% 0, 100% 100%, 24% 100%);
   transform:skewX(12deg);
-  box-shadow:inset 0 0 26px rgba(255,255,255,.25);
 }
 
 .wrap-shadow{
@@ -224,17 +212,19 @@ p{
 
 .final{
   position:absolute;
-  bottom:20px;
-  width:100%;
+  left:0;
+  right:0;
+  bottom:22px;
+  z-index:5;
   text-align:center;
   font-family:"Great Vibes",cursive;
   font-size:28px;
   color:#fff;
   text-shadow:0 2px 14px rgba(120,20,60,.55);
   opacity:0;
-  transition:1.4s ease;
-  z-index:5;
+  transition:1.2s ease;
 }
+
 .bouquet-wrap.show .final{
   opacity:1;
 }
@@ -260,7 +250,7 @@ p{
   letter-spacing:.08em;
   text-transform:uppercase;
   z-index:20;
-  animation: hintPulse 1.5s ease-in-out infinite alternate;
+  animation:hintPulse 1.5s ease-in-out infinite alternate;
 }
 @keyframes hintPulse{
   from{opacity:.5; transform:translateX(-50%) translateY(0)}
@@ -287,9 +277,10 @@ p{
   <p id="l4">and that means more than you think</p>
 
   <div id="bouquetWrap" class="bouquet-wrap">
-    <div class="bouquet-frame">
-      <img class="bouquet-img" src="image.jpg" alt="bouquet reveal">
-    </div>
+    <img class="bouquet-img" src="./image.jpg" alt="bouquet">
+    <div class="bouquet-overlay"></div>
+    <div class="bouquet-fold left"></div>
+    <div class="bouquet-fold right"></div>
     <div class="wrap-shadow"></div>
     <div class="final">
       Happy Birthday, Arni! 💗<br>
@@ -315,12 +306,12 @@ for (let i = 0; i < 18; i++) {
 }
 
 let played = false;
-document.body.addEventListener("click", () => {
-  if (!played) {
-    document.getElementById("music").play().catch(()=>{});
-    played = true;
-  }
-}, { once: true });
+function playMusic(){
+  if (played) return;
+  const audio = document.getElementById("music");
+  audio.play().catch(()=>{});
+  played = true;
+}
 
 function createPetals(count=42){
   const petals = ["🌸","💮","🌺","🌷"];
@@ -355,16 +346,16 @@ function createPetals(count=42){
 }
 
 const bouquetWrap = document.getElementById("bouquetWrap");
-const reveal = () => {
+function reveal(){
   bouquetWrap.classList.add("show");
   createPetals();
-};
+  playMusic();
+}
 
 setTimeout(reveal, 9000);
-
 window.addEventListener("scroll", () => {
   const y = window.scrollY;
-  bouquetWrap.style.transform = `translateY(${Math.max(0, 35 - y/18)}px)`;
+  bouquetWrap.style.transform = `translateY(${Math.max(0, 24 - y/18)}px)`;
 });
 
 window.addEventListener("click", reveal, { once: true });
