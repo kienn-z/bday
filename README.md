@@ -10,37 +10,24 @@
 *{box-sizing:border-box;margin:0;padding:0}
 
 body{
-  min-height:200vh;
-  display:grid;
-  place-items:center;
-  overflow-x:hidden;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   font-family:"Poppins",sans-serif;
-  background: radial-gradient(circle at top, #ffe3ef 0%, #eadcff 38%, #d7f3ff 100%);
+  background: radial-gradient(circle at top, #ffe3ef 0%, #eadcff 40%, #d7f3ff 100%);
+  overflow-x:hidden;
 }
 
-/* cinematic entrance */
-body.loaded .card{
-  animation:zoomIn 1.4s ease forwards;
-}
-@keyframes zoomIn{
-  from{transform:scale(.85); opacity:0}
-  to{transform:scale(1); opacity:1}
-}
-
-/* floating glow background */
+/* soft glow */
 body::before{
   content:"";
   position:fixed;
   inset:0;
   pointer-events:none;
   background:
-    radial-gradient(circle at 20% 18%, rgba(255,255,255,.4), transparent 25%),
-    radial-gradient(circle at 80% 30%, rgba(255,255,255,.25), transparent 20%);
-  animation:glow 8s ease-in-out infinite alternate;
-}
-@keyframes glow{
-  from{transform:scale(1)}
-  to{transform:scale(1.05)}
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.4), transparent 25%),
+    radial-gradient(circle at 80% 30%, rgba(255,255,255,.2), transparent 20%);
 }
 
 /* CARD */
@@ -48,17 +35,16 @@ body::before{
   width:min(430px,92vw);
   height:min(650px,88vh);
   border-radius:30px;
-  background:rgba(255,248,251,.65);
+  background:rgba(255,248,251,.7);
   backdrop-filter:blur(18px);
   position:relative;
   overflow:hidden;
   text-align:center;
   padding:34px 28px;
   box-shadow:0 20px 60px rgba(124,63,111,.18);
-  opacity:0;
-  transform:scale(.85);
 }
 
+/* TEXT */
 h1{
   font-family:"Playfair Display",serif;
   font-size:24px;
@@ -69,131 +55,73 @@ h1{
 
 .name{
   font-family:"Great Vibes",cursive;
-  font-size:62px;
+  font-size:64px;
   color:#b16aa6;
   margin:6px 0 10px;
 }
 
-/* LETTERS */
 p{
   font-size:14px;
   color:#4b4453;
-  opacity:0;
-  transform:translateY(14px);
-  transition:.8s ease;
-}
-p.show{
-  opacity:1;
-  transform:translateY(0);
+  margin:14px 0;
 }
 
-/* ===================== */
-/* BOUQUET (GIFT REVEAL) */
-/* ===================== */
+/* BOUQUET — ALWAYS VISIBLE */
 .bouquet-wrap{
   position:absolute;
   left:0;
   right:0;
   bottom:0;
-  height:58%;
-  opacity:0;
-  transform:translateY(40px) scaleY(.7);
-  transform-origin:bottom;
-  transition:1.6s cubic-bezier(.2,.9,.2,1);
+  height:60%;
 }
 
-.bouquet-wrap.show{
-  opacity:1;
-  transform:translateY(0) scaleY(1);
-}
-
-/* bouquet image */
 .bouquet-img{
   width:100%;
   height:100%;
   object-fit:cover;
   object-position:center bottom;
-  position:absolute;
 }
 
-/* soft cinematic fade */
-.bouquet-overlay{
+/* overlay soft fade */
+.overlay{
   position:absolute;
   inset:0;
-  background:linear-gradient(to top, rgba(255,230,240,.95), transparent 45%);
+  background:linear-gradient(to top, rgba(255,230,240,.85), transparent 50%);
 }
 
-/* fold animation */
-.fold{
-  position:absolute;
-  bottom:0;
-  width:50%;
-  height:60%;
-  background:linear-gradient(135deg,#fff,#ffb6d2);
-  z-index:3;
-  transition:1.5s ease;
-}
-
-.fold.left{
-  left:0;
-  clip-path:polygon(0 0,100% 0,80% 100%,0 100%);
-}
-
-.fold.right{
-  right:0;
-  clip-path:polygon(0 0,100% 0,100% 100%,20% 100%);
-}
-
-/* when revealed */
-.bouquet-wrap.show .fold.left{
-  transform:translateX(-120%) rotate(-8deg);
-}
-.bouquet-wrap.show .fold.right{
-  transform:translateX(120%) rotate(8deg);
-}
-
-/* final text */
+/* message ON bouquet */
 .final{
   position:absolute;
-  bottom:18px;
+  bottom:20px;
   width:100%;
   text-align:center;
   font-family:"Great Vibes",cursive;
-  font-size:26px;
+  font-size:28px;
   color:white;
-  opacity:0;
-  transform:translateY(10px);
-  transition:1s ease 1s;
-  text-shadow:0 2px 10px rgba(0,0,0,.3);
+  text-shadow:0 2px 12px rgba(0,0,0,.35);
 }
 
-.bouquet-wrap.show .final{
-  opacity:1;
-  transform:translateY(0);
-}
-
-/* PETALS (parallax) */
+/* petals */
 .petal{
   position:fixed;
   top:-10vh;
   font-size:18px;
   pointer-events:none;
   z-index:10;
-  opacity:.8;
 }
 
-/* sparkle */
+/* sparkles */
 .sparkle{
   position:fixed;
   font-size:10px;
   color:white;
-  animation:twinkle 3s infinite alternate;
+  opacity:.7;
+  animation:twinkle 2.5s infinite alternate;
 }
 @keyframes twinkle{
   from{opacity:.2}
   to{opacity:1}
 }
-
 </style>
 </head>
 
@@ -208,38 +136,30 @@ p.show{
   <h1>happy birthday</h1>
   <div class="name">Arni ♡</div>
 
-  <p id="l1">i didn’t wanna just send a simple message…</p>
-  <p id="l2">kasi you’re not someone ordinary to me</p>
-  <p id="l3">you make things feel lighter</p>
-  <p id="l4">and that means more than you think</p>
+  <p>i didn’t wanna just send a simple message…</p>
+  <p>kasi you’re not someone ordinary to me</p>
+  <p>you make things feel lighter</p>
+  <p>and that means more than you think</p>
 
-  <div class="bouquet-wrap" id="bouquet">
-    <img class="bouquet-img" src="./image.jpg">
-    <div class="bouquet-overlay"></div>
+  <!-- BOUQUET ALWAYS SHOWN -->
+  <div class="bouquet-wrap">
 
-    <div class="fold left"></div>
-    <div class="fold right"></div>
+    <img class="bouquet-img" src="./image.jpg" alt="bouquet">
+
+    <div class="overlay"></div>
 
     <div class="final">
-      Happy Birthday, Arni 💗
+      Happy Birthday, Arni 💗<br>
+      i’m really glad i met you
     </div>
+
   </div>
 
 </div>
 
 <script>
-document.body.classList.add("loaded");
-
-/* LETTERS */
-const lines=["l1","l2","l3","l4"];
-lines.forEach((id,i)=>{
-  setTimeout(()=>{
-    document.getElementById(id).classList.add("show");
-  }, i*1500);
-});
-
 /* sparkles */
-for(let i=0;i<20;i++){
+for(let i=0;i<18;i++){
   const s=document.createElement("div");
   s.className="sparkle";
   s.innerText="✨";
@@ -251,15 +171,15 @@ for(let i=0;i<20;i++){
 /* petals */
 function petals(){
   const list=["🌸","🌷","💮"];
-  for(let i=0;i<35;i++){
+  for(let i=0;i<30;i++){
     const p=document.createElement("div");
     p.className="petal";
     p.innerText=list[Math.floor(Math.random()*list.length)];
 
     let x=Math.random()*window.innerWidth;
     let drift=(Math.random()*200-100);
-    let dur=6000+Math.random()*3000;
     let start=performance.now();
+    let dur=7000;
 
     function fall(t){
       let p01=Math.min((t-start)/dur,1);
@@ -275,32 +195,11 @@ function petals(){
   }
 }
 
-/* bouquet reveal */
-const bouquet=document.getElementById("bouquet");
-let shown=false;
-
-function reveal(){
-  if(shown) return;
-  shown=true;
-
-  bouquet.classList.add("show");
+/* auto effects */
+setTimeout(()=>{
   petals();
   document.getElementById("music").play().catch(()=>{});
-}
-
-/* triggers */
-setTimeout(reveal,9000);
-window.addEventListener("click",reveal,{once:true});
-window.addEventListener("scroll",()=>{
-  if(window.scrollY>120) reveal();
-});
-
-/* parallax (light movement only, no breaking transforms) */
-window.addEventListener("mousemove",(e)=>{
-  const x=(e.clientX/window.innerWidth-0.5)*10;
-  const y=(e.clientY/window.innerHeight-0.5)*10;
-  document.querySelector(".card").style.transform=`translate(${x}px,${y}px)`;
-});
+}, 1500);
 </script>
 
 </body>
